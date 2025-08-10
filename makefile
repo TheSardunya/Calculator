@@ -1,7 +1,8 @@
-default:
-oreno.obj : oreno.cpp oreno.h ; cl /c oreno.cpp
-orenomath.obj : orenomath.cpp orenomath.h ; cl /c orenomath.cpp
-orenomath.lib : orenomath.obj; lib /OUT:orenomath.lib orenomath.obj
-oreno.lib : oreno.obj; lib /OUT:oreno.lib oreno.obj
-ac.rc : ac.res ; rc ac.res
-ac.exe : oreno.lib orenomath.lib ac.rc ; cl /EHsc ac.cpp ac.rc /link oreno.lib orenomath.lib
+ac.exe : ac.cpp oreno.cpp orenomath.cpp ac.rc
+  cl /c oreno.cpp
+  lib /OUT:oreno.lib oreno.obj
+  cl /c orenomath.cpp
+  lib /OUT:orenomath.lib orenomath.obj
+  rc ac.rc
+  cl /EHsc ac.cpp ac.res /link oreno.lib orenomath.lib
+ac: ac.exe
