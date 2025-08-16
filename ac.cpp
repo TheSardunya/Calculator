@@ -14,18 +14,11 @@
 #define chcp
 #endif
 using namespace std;
-int main()
+wstring Calculate(wstring RawInput)
 {
-    chcp
-    cls
-	setlocale(LC_ALL, "");
-    std::wcout.sync_with_stdio(false); // or set the C locale too
-    std::wcout.imbue(std::locale(""));
-    while (true)
-    {
-        int firstopnum = 0, veryfirstopnum = 0, lastopnum = 0, opin = -1, startop = 0, endop = 0, next = 0, parannum = 0;
-        wstring RawInput = L"", AraInput = L"";
-        getline(wcin, RawInput);
+	int firstopnum = 0, veryfirstopnum = 0, lastopnum = 0, opin = -1, startop = 0, endop = 0, next = 0, parannum = 0;
+        wstring AraInput = L"";
+		bool isParanEnded = true, isBaboParanEnded = true;
         RawInput = clean_white_space(RawInput);
         if (RawInput == L"q" || RawInput == L"Q")
         {
@@ -39,25 +32,30 @@ int main()
         for (int i = 0; i < RawInput.length(); i++)
         {
 
-            if (RawInput[i] == '(')
+            if (RawInput[i] == '(' && isParanEnded)
             {
                 opin = i;
                 parannum++;
+				isParanEnded = false;
             }
+			else if(RawInput[i] == ')' && !isParanEnded && RawInput[i + 1] != ')')
+			{
+				isParanEnded = true;
+			}
         }
         for (int i = parannum; i > 0; i--)
         {
             wstring IRawInput = L"";
-            bool inParan = false, isSingle = true, facto = false, squareroot = false;
-            int startparan = -1, endparan = -1, paranfirstopnum = 0, paranveryfirstopnum = 0, paranlastopnum = 0;
+            bool inParan = false, isSingle = true;
+            int startparan = -1, endparan = -1;
             for (int x = 0; x < RawInput.length(); x++)
             {
-                if (RawInput[x] == '(')
+                if (RawInput[x] == '(' && !inParan)
                 {
                     startparan = x;
                     inParan = true;
                 }
-                else if (RawInput[x] == ')')
+                else if (RawInput[x] == ')' && RawInput[x + 1] != ')' && inParan)
                 {
                     inParan = 0;
                     endparan = x;
@@ -65,26 +63,7 @@ int main()
                 }
                 else if (inParan)
                 {
-
                     IRawInput += RawInput[x];
-                }
-            }
-            for (int i = 0; i < IRawInput.length(); i++)
-            {
-                if (IRawInput[i] == '*' || IRawInput[i] == '/' || IRawInput[i] == '!')
-                {
-                    opin = i;
-                    paranfirstopnum++;
-                }
-                else if (IRawInput[i] == '+' || IRawInput[i] == '-' && i != 0 && i != opin + 1)
-                {
-                    opin = i;
-                    paranlastopnum++;
-                }
-                else if (IRawInput[i] == '^' ||IRawInput[i] == 'v')
-                {
-                    opin = i;
-                    paranveryfirstopnum++;
                 }
             }
             for (int x = 0; x < IRawInput.length(); x++)
@@ -128,343 +107,26 @@ int main()
                         AraInput += IRawInput;
                     }
                 }
-                RawInput = AraInput;
+                RawInput = AraInput; 
                 AraInput = L"";
             }
             else
             {
-                for (int i = paranveryfirstopnum; i > 0; i--)
-                {
-                    wstring sum = L"";
-                    for (int x = next; x < IRawInput.length(); x++)
-                    {
-                        if (IRawInput[x] == '^' || IRawInput[x] == 'v')
-                        {
-                            if(IRawInput[x] == 'v'){squareroot = 1;}
-                            else{squareroot = 0;}
-                            opin = x;
-                            break;
-                        }
-                    }
-                    for (int x = opin + 1; x < IRawInput.length(); x++)
-                    {
-                        if (IRawInput[x] == '+' || IRawInput[x] == '/' || IRawInput[x] == '*' || IRawInput[x] == '^' || IRawInput[x] == '-' && x != opin + 1)
-                        {
-                            endop = x - 1;
-                            break;
-                        }
-                        else if (x == IRawInput.length() - 1)
-                        {
-                            endop = x;
-                            break;
-                        }
-                    }
-                    for (int x = opin - 1; x >= 0 && !squareroot; x--)
-                    {
-                        if (IRawInput[x] == '+' || IRawInput[x] == '/' || IRawInput[x] == '*' || IRawInput[x] == '-' && IRawInput[x - 1] != '-' && x != 0)
-                        {
-                            startop = x + 1;
-                            break;
-                        }
-                        else if (x == 0)
-                        {
-                            startop = x;
-                            break;
-                        }
-                    }
-                    if(squareroot){startop = opin;}
-                    for (int x = startop; x <= endop && !squareroot; x++)
-                    {
-                        sum += IRawInput[x];
-                    }
-                    for(int x = startop + 1; x <= endop && squareroot; x++)
-                    {
-                        sum += IRawInput[x];
-                    }
-                    for (int x = 0; x <= IRawInput.length(); x++)
-                    {
-                        if (x < startop || x > endop)
-                        {
-                            AraInput += IRawInput[x];
-                        }
-                        else if (x == startop && !squareroot)
-                        {
-                            double a, b;
-                            wstring rawx, rawy;
-                            char op;
-                            bool xturn = true;
-                            for (int q = 0; q < sum.length(); q++)
-                            {
-                                if (sum[q] == '^')
-                                {
-                                    op = sum[q];
-                                    xturn = false;
-                                }
-                                else if (xturn)
-                                {
-                                    rawx += sum[q];
-                                }
-                                else
-                                {
-                                    rawy += sum[q];
-                                }
-                            }
-                            if (TryParse(rawx) && TryParse(rawy))
-                            {
-                                a = stod(rawx);
-                                b = stod(rawy);
-
-                                if (b < 0)
-                                {
-                                    double sumch = a;
-                                    for (int z = abs(b) - 1; z > 0; z--)
-                                    {
-                                        sumch *= a;
-                                    } // 2*2*2 = 2^3 = 2 times 2*=2 = 3-1times 2*=2
-                                    AraInput += to_wstring(1 / sumch);
-                                }
-                                else if (b > 0)
-                                {
-                                    double sumch = a;
-                                    for (int z = b - 1; z > 0; z--)
-                                    {
-                                        sumch *= a;
-                                    }
-                                    AraInput += to_wstring(sumch);
-                                }
-                                else
-                                {
-                                    AraInput += L"1";
-                                }
-                            }
-                        }
-                        else if(x == startop && squareroot)
-                        {
-                            if(TryParse(sum)){AraInput += to_wstring(sqrt(stod(sum)));}
-                            else{cerr << "An error occured while parsing.\n";}
-                        }
-                    }
-                    IRawInput = AraInput;
-                    AraInput = L"";
-                    sum = L"";
-                    next = 0;
-                    endop = 0;
-                    startop = 0;
-                    opin = 0;
-                }
-                next = 0;
-                opin = 0;
-
-                for (int i = paranfirstopnum; i > 0; i--)
-                {
-                    wstring sum = L"";
-                    for (int x = next; x < IRawInput.length(); x++)
-                    {
-                        if (IRawInput[x] == '*' || IRawInput[x] == '/' || IRawInput[x] == '!')
-                        {
-                            if (IRawInput[x] == '!')
-                            {
-                                facto = 1;
-                                opin = x;
-                                break;
-                            }
-                            opin = x;
-                            break;
-                        }
-                    }
-                    for (int x = opin + 1; x < RawInput.length() && !facto; x++)
-                    {
-                        if (IRawInput[x] == '+' || IRawInput[x] == '/' || IRawInput[x] == '*' || IRawInput[x] == '-' && x != opin + 1)
-                        {
-                            endop = x - 1;
-                            break;
-                        }
-                        else if (x == IRawInput.length() - 1)
-                        {
-                            endop = x;
-                            break;
-                        }
-                    }
-                    if (facto)
-                    {
-                        endop = opin;
-                    }
-                    for (int x = opin - 1; x >= 0; x--)
-                    {
-                        if (IRawInput[x] == '+' || IRawInput[x] == '/' || IRawInput[x] == '*' || IRawInput[x] == '-' && IRawInput[x - 1] != '-' && x != 0)
-                        {
-                            startop = x + 1;
-                            break;
-                        }
-                    }
-                    for (int x = startop; x <= endop; x++)
-                    {
-                        sum += IRawInput[x];
-                    }
-                    for (int x = 0; x <= IRawInput.length(); x++)
-                    {
-                        if (x < startop || x > endop)
-                        {
-                            AraInput += IRawInput[x];
-                        }
-                        else if (x == startop)
-                        {
-
-                            double a, b;
-                            wstring rawx, rawy;
-                            char op;
-                            bool xturn = true;
-                            for (int q = 0; q < sum.length(); q++)
-                            {
-                                if (sum[q] == '*' || sum[q] == '/' || sum[q] == '!')
-                                {
-                                    op = sum[q];
-                                    xturn = false;
-                                }
-                                else if (xturn)
-                                {
-                                    rawx += sum[q];
-                                }
-                                else
-                                {
-                                    rawy += sum[q];
-                                }
-                            }
-                            if (TryParse(rawx) && TryParse(rawy) && !facto)
-                            {
-                                a = stod(rawx);
-                                b = stod(rawy);
-                                if (op == '*')
-                                {
-                                    AraInput += to_wstring(a * b);
-                                }
-                                else
-                                {
-                                    AraInput += to_wstring(a / b);
-                                }
-                            }
-                            else if (facto && TryParse(rawx))
-                            {
-                                int sumFact = stoi(rawx);
-                                for (int v = sumFact - 1; v > 0; v--)
-                                {
-                                    sumFact *= v;
-                                }
-                                AraInput += to_wstring(sumFact);
-                            }
-                        }
-                    }
-                    IRawInput = AraInput;
-                    AraInput = L"";
-                    sum = L"";
-                    next = 0;
-                    endop = 0;
-                    startop = 0;
-                    opin = 0;
-                }
-                next = 0;
-                opin = 0;
-                for (int i = paranlastopnum; i > 0; i--)
-                {
-                    wstring sum = L"";
-                    for (int x = next; x < IRawInput.length(); x++)
-                    {
-                        if (IRawInput[x] == '+' || IRawInput[x] == '-' && x != next)
-                        {
-                            opin = x;
-                            break;
-                        }
-                    }
-                    for (int x = opin + 1; x < IRawInput.length(); x++)
-                    {
-                        if (IRawInput[x] == '+' || IRawInput[x] == '/' || IRawInput[x] == '*' || IRawInput[x] == '-' && x != opin + 1)
-                        {
-                            endop = x - 1;
-                            break;
-                        }
-                        else if (x == IRawInput.length() - 1)
-                        {
-                            endop = x;
-                            break;
-                        }
-                    }
-                    for (int x = opin - 1; x >= 0; x--)
-                    {
-                        if (IRawInput[x] == '+' || IRawInput[x] == '/' || IRawInput[x] == '*' || IRawInput[x] == '-' && IRawInput[x - 1] != '-' && x != 0)
-                        {
-                            startop = x + 1;
-                            break;
-                        }
-                    }
-                    for (int x = startop; x <= endop; x++)
-                    {
-                        sum += IRawInput[x];
-                    }
-                    for (int x = 0; x <= IRawInput.length(); x++)
-                    {
-                        if (x < startop || x > endop)
-                        {
-                            AraInput += IRawInput[x];
-                        }
-                        else if (x == startop)
-                        {
-                            double a, b;
-                            wstring rawx, rawy;
-                            char op;
-                            bool xturn = true;
-                            for (int q = 0; q < sum.length(); q++)
-                            {
-                                if (sum[q] == '+' || sum[q] == '-' && q != 0 && sum[q - 1] != '-')
-                                {
-                                    op = sum[q];
-                                    xturn = false;
-                                }
-                                else if (xturn)
-                                {
-                                    rawx += sum[q];
-                                }
-                                else
-                                {
-                                    rawy += sum[q];
-                                }
-                            }
-                            if (TryParse(rawx) && TryParse(rawy))
-                            {
-                                a = stod(rawx);
-                                b = stod(rawy);
-                                if (op == '+')
-                                {
-                                    AraInput += to_wstring(a + b);
-                                }
-                                else
-                                {
-                                    AraInput += to_wstring(a - b);
-                                }
-                            }
-                        }
-                    }
-                    IRawInput = AraInput;
-                    AraInput = L"";
-                    sum = L"";
-                    next = 0;
-                    endop = 0;
-                    startop = 0;
-                    opin = 0;
-                }
-                for (int x = 0; x < RawInput.length(); x++)
-                {
-                    if (x < startparan || x > endparan)
-                    {
-                        AraInput += RawInput[x];
-                    }
-                    else if (x == startparan)
-                    {
-                        AraInput += IRawInput;
-                    }
-                }
-                RawInput = AraInput;
-                AraInput = L"";
-            }
+				for(int x = 0; x < RawInput.length(); x++)
+				{
+					if(x < startparan || x > endparan)
+					{
+						AraInput += RawInput[x];
+					}
+					else if(x == startparan)
+					{
+						AraInput += Calculate(IRawInput);
+					}
+					
+				}
+				RawInput = AraInput;
+				AraInput = L"";
+			}
         }
         for (int i = 0; i < RawInput.length(); i++)
         {
@@ -884,8 +546,20 @@ int main()
             startop = 0;
             opin = 0;
         }
-        wcout << "\n\n"
-             << RawInput << "\n\n";
+        return RawInput;
+}
+int main()
+{
+    chcp
+    cls
+	setlocale(LC_ALL, "");
+    std::wcout.sync_with_stdio(false); // or set the C locale too
+    std::wcout.imbue(std::locale(""));
+    while (true)
+    {
+        wstring inputbaba = L"";
+		getline(wcin, inputbaba);
+		wcout << Calculate(inputbaba) << "\n";
     }
 
     return 0;
