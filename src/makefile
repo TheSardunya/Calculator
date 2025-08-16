@@ -8,7 +8,8 @@ orenomath.lib : orenomath.obj
 oreno.lib : oreno.obj
   lib /OUT:oreno.lib oreno.obj
 ac.res : ac.rc
-  rc ac.res
-ac.exe : oreno.lib orenomath.lib ac.rc ac.cpp
-  cl /EHsc ac.cpp ac.rc /link oreno.lib orenomath.lib
+  rc ac.rc
+ac.exe : oreno.lib orenomath.lib ac.res ac.cpp
+  cl /EHsc ac.cpp ac.res /link oreno.lib orenomath.lib
+
 
