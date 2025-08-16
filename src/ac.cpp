@@ -16,9 +16,9 @@
 using namespace std;
 wstring Calculate(wstring RawInput)
 {
-	int firstopnum = 0, veryfirstopnum = 0, lastopnum = 0, opin = -1, startop = 0, endop = 0, next = 0, parannum = 0;
+	int firstopnum = 0, veryfirstopnum = 0, lastopnum = 0, opin = -1, startop = 0, endop = 0, next = 0, parannum = 0, innerparannum = 0, paranin = -1;
         wstring AraInput = L"";
-		bool isParanEnded = true, isBaboParanEnded = true;
+		bool isParanEnded = true, abesod = true;
         RawInput = clean_white_space(RawInput);
         if (RawInput == L"q" || RawInput == L"Q")
         {
@@ -38,11 +38,21 @@ wstring Calculate(wstring RawInput)
                 parannum++;
 				isParanEnded = false;
             }
-			else if(RawInput[i] == ')' && !isParanEnded && RawInput[i + 1] != ')')
+			else if(RawInput[i] == '(' && !isParanEnded)
+			{
+				innerparannum++;
+			}
+			else if(RawInput[i] == ')' && !isParanEnded && RawInput[i + 1] != ')' && innerparannum == 0)
 			{
 				isParanEnded = true;
+				paranin = i;
+			}
+			else if(RawInput[i] == ')' && !isParanEnded && innerparannum != 0)
+			{
+				innerparannum--;
 			}
         }
+		innerparannum = 0;
         for (int i = parannum; i > 0; i--)
         {
             wstring IRawInput = L"";
@@ -55,7 +65,7 @@ wstring Calculate(wstring RawInput)
                     startparan = x;
                     inParan = true;
                 }
-                else if (RawInput[x] == ')' && RawInput[x + 1] != ')' && inParan)
+                else if (RawInput[x] == ')' && x == paranin && inParan)
                 {
                     inParan = 0;
                     endparan = x;
