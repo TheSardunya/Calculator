@@ -1,1 +1,1 @@
-Compile with MSVC. 
+Compile with MinGW. 
