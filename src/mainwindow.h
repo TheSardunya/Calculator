@@ -5,6 +5,7 @@
 #include <QLabel>
 #include "MouseCache.h"
 #include <QPushButton>
+#include <QKeyEvent>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -38,10 +39,14 @@ private slots:
     void addStrOpnBrck();
     void addStrClsBrck();
     void addStrPwr();
+    void addStrSqrt();
+    void addStrFact();
     void catchHoverMin();
     void catchUnHoverMin();
     void catchHoverCls();
     void catchUnHoverCls();
+protected:
+    void keyPressEvent(QKeyEvent *event) override;
 private:
     QString Calculate(QString);
     QString INPUT;
@@ -61,6 +66,8 @@ private:
     QPushButton *btn8;
     QPushButton *btn9;
     QPushButton *btn0;
+    QPushButton *btnFact;
+    QPushButton *btnSqrt;
     QPushButton *btnRes;
     QPushButton *btnAC;
     QPushButton *btnPlus;
@@ -69,5 +76,6 @@ private:
     QPushButton *btnMult;
     QPushButton *btnPwr;
     bool isPower;
+
 };
 #endif

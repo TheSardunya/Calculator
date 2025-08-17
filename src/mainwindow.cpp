@@ -8,9 +8,12 @@
 #include <sstream>
 #include <QBoxLayout>
 #include "MouseCache.h"
+#include <QKeyEvent>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
+    setFocus();
+    setFocusPolicy(Qt::StrongFocus);
     this->setWindowFlags(Qt::FramelessWindowHint);
     QWidget *titleBar = new QWidget(this);
     titleBar->setStyleSheet("background-color: #2F2F38;");
@@ -45,6 +48,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     btn8 = new QPushButton("8", this);
     btn9 = new QPushButton("9", this);
     btn0 = new QPushButton("0", this);
+    btnSqrt = new QPushButton("√", this);
+    btnFact = new QPushButton("!", this);
     btnRes = new QPushButton("=", this);
     btnAC = new QPushButton("AC", this);
     btnPlus = new QPushButton("+", this);
@@ -54,29 +59,33 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     btnOpnBrck = new QPushButton("(", this);
     btnClsBrck = new QPushButton(")", this);
     btnPwr = new QPushButton("xʸ", this);
-    btnOpnBrck->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 6px;font-size: 24px;");
-    btnClsBrck->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 6px;font-size: 24px;");
-    btn1->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 6px;font-size: 24px;");
-    btn2->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 6px;font-size: 24px;");
-    btn3->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 6px;font-size: 24px;");
-    btn4->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 6px;font-size: 24px;");
-    btn5->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 6px;font-size: 24px;");
-    btn6->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 6px;font-size: 24px;");
-    btn7->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 6px;font-size: 24px;");
-    btn8->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 6px;font-size: 24px;");
-    btn9->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 6px;font-size: 24px;");
-    btn0->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 6px;font-size: 24px;");
-    btnCon->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 6px;font-size: 24px;");
-    btnPlus->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 6px;font-size: 24px;");
-    btnDiv->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 6px;font-size: 24px;");
-    btnMult->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 6px;font-size: 24px;");
-    btnRes->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 6px;font-size: 24px;");
-    btnAC->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 6px;font-size: 24px;");
-    btnPwr->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 6px;font-size: 24px;");
-    btnPwr->setGeometry(260, 480, 70, 70);
-    btnOpnBrck->setGeometry(100, 480, 70, 70);
-    btnClsBrck->setGeometry(180, 480, 70, 70);
-    btn0->setGeometry(20, 480, 70, 70);
+    btnOpnBrck->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
+    btnClsBrck->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
+    btn1->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
+    btn2->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
+    btn3->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
+    btn4->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
+    btn5->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
+    btn6->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
+    btn7->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
+    btn8->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
+    btn9->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
+    btn0->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
+    btnSqrt->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
+    btnFact->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
+    btnCon->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
+    btnPlus->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
+    btnDiv->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
+    btnMult->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
+    btnRes->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 32px;");
+    btnAC->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
+    btnPwr->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
+    btnPwr->setGeometry(180, 480, 70, 70);
+    btnOpnBrck->setGeometry(180, 560, 70, 70);
+    btnClsBrck->setGeometry(260, 560, 70, 70);
+    btn0->setGeometry(20, 480, 150, 70);
+    btnSqrt->setGeometry(20, 560, 70, 70);
+    btnFact->setGeometry(100, 560, 70, 70);
     btnPlus->setGeometry(20, 160, 70, 70);
     btnCon->setGeometry(100, 160, 70, 70);
     btnDiv->setGeometry(180, 160, 70, 70);
@@ -84,7 +93,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     btn1->setGeometry(20, 400, 70, 70);
     btn2->setGeometry(100, 400, 70, 70);
     btn3->setGeometry(180, 400, 70, 70);
-    btnAC->setGeometry(260, 400, 70, 70);
+    btnAC->setGeometry(260, 400, 70, 150);
     btnRes->setGeometry(260, 240, 70, 150);
     btn4->setGeometry(20, 320, 70, 70);
     btn5->setGeometry(100, 320, 70, 70);
@@ -93,7 +102,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     btn8->setGeometry(100, 240, 70, 70);
     btn9->setGeometry(180, 240, 70, 70);
     this->setWindowTitle("Calculator");
-    this->resize(350, 600);
+    this->resize(350, 680);
     this->setStyleSheet("background-color: #101018");
     this->setWindowIcon(QIcon(":/icons/calculator.ico"));
     connect(btn0, SIGNAL(clicked()), this, SLOT(addStr0()));
@@ -106,6 +115,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     connect(btn7, SIGNAL(clicked()), this, SLOT(addStr7()));
     connect(btn8, SIGNAL(clicked()), this, SLOT(addStr8()));
     connect(btn9, SIGNAL(clicked()), this, SLOT(addStr9()));
+    connect(btnSqrt, SIGNAL(clicked()), this, SLOT(addStrSqrt()));
+    connect(btnFact, SIGNAL(clicked()), this, SLOT(addStrFact()));
     connect(btnRes, SIGNAL(clicked()), this, SLOT(addStrRes()));
     connect(btnAC, SIGNAL(clicked()), this, SLOT(addStrAC()));
     connect(btnPlus, SIGNAL(clicked()), this, SLOT(addStrPlus()));
@@ -116,7 +127,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     connect(btnClsBrck, SIGNAL(clicked()), this, SLOT(addStrClsBrck()));
     connect(btnPwr, SIGNAL(clicked()), this, SLOT(addStrPwr()));
 }
-
 QString MainWindow::Calculate(QString RawInput)
 {
     QMessageBox warnParse;
@@ -741,6 +751,22 @@ void MainWindow::addStrClsBrck()
     ResultLab->setText(summary);
     isPower = false;
 }
+void MainWindow::addStrSqrt()
+{
+    INPUT += "v";
+    QString summary = ResultLab->text();
+    summary += "√";
+    ResultLab->setText(summary);
+    isPower = false;
+}
+void MainWindow::addStrFact()
+{
+    INPUT += "!";
+    QString summary = ResultLab->text();
+    summary += "!";
+    ResultLab->setText(summary);
+    isPower = false;
+}
 void MainWindow::addStrPwr()
 {
     INPUT += "^";
@@ -761,4 +787,34 @@ void MainWindow::catchHoverCls()
 void MainWindow::catchUnHoverCls()
 {
     closeBtn->setStyleSheet("background-color: #2F2F38;color: #DFDFDF; font-size: 18px; border: none;");
+}
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    if(!event->text().isEmpty())
+    {
+        if(event->text() == "^"){addStrPwr();}
+        else if(event->text() == "1"){addStr1();}
+        else if(event->text() == "2"){addStr2();}
+        else if(event->text() == "3"){addStr3();}
+        else if(event->text() == "4"){addStr4();}
+        else if(event->text() == "5"){addStr5();}
+        else if(event->text() == "6"){addStr6();}
+        else if(event->text() == "7"){addStr7();}
+        else if(event->text() == "8"){addStr8();}
+        else if(event->text() == "9"){addStr9();}
+        else if(event->text() == "0"){addStr0();}
+        else if(event->text() == "("){addStrOpnBrck();}
+        else if(event->text() == ")"){addStrClsBrck();}
+        else if(event->text() == "/"){addStrDiv();}
+        else if(event->text() == "+"){addStrPlus();}
+        else if(event->text() == "-"){addStrCon();}
+        else if(event->text() == "*"){addStrMult();}
+        else if(event->text() == "!"){addStrFact();}
+        else if(event->text() == "√"){addStrSqrt();}
+    }
+    if(event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
+    {
+        addStrRes();
+    }
+    if(event->key() == Qt::Key_Backspace){addStrAC();}
 }
