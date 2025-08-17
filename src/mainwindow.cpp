@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     INPUT = "";
     ResultLab = new QLabel(this);
     ResultLab->setGeometry(15, 50, 320, 54);
-    ResultLab->setStyleSheet("color: #DFDFDF; font-size: 48px; background-color: #30303F; border-radius: 8px;");
+    ResultLab->setStyleSheet("color: #DFDFDF; font-size: 32px; background-color: #30303F; border-radius: 8px;");
     btn1 = new QPushButton("1", this);
     btn2 = new QPushButton("2", this);
     btn3 = new QPushButton("3", this);
@@ -119,55 +119,46 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
 QString MainWindow::Calculate(QString RawInput)
 {
+    QMessageBox warnParse;
+    warnParse.setText("Syntax error");
+    warnParse.setWindowTitle("Error");
     int firstopnum = 0, veryfirstopnum = 0, lastopnum = 0, opin = -1, startop = 0, endop = 0, next = 0, parannum = 0, innerparannum = 0, paranin = -1;
     QString AraInput = "";
-    bool isParanEnded = true, abesod = true;
+    bool startBabo = false, abesod = true;
     for (int i = 0; i < RawInput.length(); i++)
     {
-        if (RawInput[i] == '(' && isParanEnded)
-        {
-            opin = i;
-            parannum++;
-            isParanEnded = false;
-        }
-        else if(RawInput[i] == '(' && !isParanEnded)
-        {
-            innerparannum++;
-        }
-        else if (RawInput[i] == ')' && !isParanEnded && ((i + 1 < RawInput.length()) ? RawInput[i + 1] != ')' : true) && innerparannum == 0)
-        {
-            isParanEnded = true;
-            paranin = i;
-        }
-        else if(RawInput[i] == ')' && !isParanEnded && innerparannum != 0)
+        if(RawInput[i] == '(' && innerparannum == 0){parannum++; innerparannum++;}
+        else if(RawInput[i] == ')' && innerparannum > 0)
         {
             innerparannum--;
         }
+        else if(RawInput[i] == '(' && innerparannum > 0){innerparannum++;}
     }
-    innerparannum = 0;
+    if(innerparannum != 0){warnParse.exec();RawInput = "";}
     for (int i = parannum; i > 0; i--)
     {
         QString IRawInput = "";
         bool inParan = false, isSingle = true;
         int startparan = -1, endparan = -1;
+        innerparannum = 0;
         for (int x = 0; x < RawInput.length(); x++)
         {
-            if (RawInput[x] == '(' && !inParan)
+            if(RawInput[x] == '(' && innerparannum == 0){startBabo = true; innerparannum++; startparan = x;}
+            else if(RawInput[x] == ')' && innerparannum > 0)
             {
-                startparan = x;
-                inParan = true;
+                innerparannum--;
+                if(RawInput[x] == ')' && innerparannum == 0)
+                {
+                    innerparannum--;
+                    endparan = x;
+                    startBabo = false;
+                    break;
+                }
             }
-            else if (RawInput[x] == ')' && x == paranin && inParan)
-            {
-                inParan = false;
-                endparan = x;
-                break;
-            }
-            else if (inParan)
-            {
-                IRawInput += RawInput[x];
-            }
+            else if(RawInput[x] == '(' && innerparannum > 0){innerparannum++;}
+            if(startBabo && startparan != x){IRawInput += RawInput[x];}
         }
+        innerparannum = 0;
         for (int x = 0; x < IRawInput.length(); x++)
         {
             if (IRawInput[x] == '+' || IRawInput[x] == '/' || IRawInput[x] == '*' || IRawInput[x] == '^' || (IRawInput[x] == '-' && x != 0))
@@ -197,6 +188,7 @@ QString MainWindow::Calculate(QString RawInput)
                     }
                     IRawInput = QString::number(ap);
                 }
+                else{warnParse.exec(); RawInput = ""; AraInput = "";}
             }
             for (int x = 0; x < RawInput.length(); x++)
             {
@@ -359,10 +351,12 @@ QString MainWindow::Calculate(QString RawInput)
                         AraInput += "1";
                     }
                 }
+                else{warnParse.exec(); RawInput = ""; AraInput = "";}
             }
             else if(x == startop && squareroot)
             {
                 if(TryParse(sum)){AraInput += QString::number(sqrt(sum.toDouble()));}
+                else{warnParse.exec(); RawInput = ""; AraInput = "";}
             }
         }
         RawInput = AraInput;
@@ -499,6 +493,7 @@ QString MainWindow::Calculate(QString RawInput)
                     }
                     AraInput += QString::number(res);
                 }
+                else{warnParse.exec(); RawInput = ""; AraInput = "";}
             }
         }
         RawInput = AraInput;
@@ -596,6 +591,7 @@ QString MainWindow::Calculate(QString RawInput)
                         AraInput += QString::number(a - b);
                     }
                 }
+                else{warnParse.exec();}
             }
         }
         RawInput = AraInput;
