@@ -11,11 +11,8 @@ class MouseCache : public QPushButton {
     Q_OBJECT
 public:
     explicit MouseCache(QWidget* parent = nullptr);
-
-signals:
-    void hovered();
-    void unhovered();
-
+    QString cssHvr;
+    QString cssUnHvr;
 protected:
     void enterEvent(QEnterEvent* event) override;
     void leaveEvent(QEvent* event) override;

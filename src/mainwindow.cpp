@@ -23,45 +23,109 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     minBtn->setGeometry(350 - 64, 0, 28, 28);
     minBtn->setStyleSheet("background-color: #2F2F38;color: #DFDFDF; font-size: 18px; border: none;");
     connect(minBtn, &QPushButton::clicked, this, &QWidget::showMinimized);
-    connect(minBtn, SIGNAL(hovered()), this, SLOT(catchHoverMin()));
-    connect(minBtn, SIGNAL(unhovered()), this, SLOT(catchUnHoverMin()));
 
     closeBtn = new MouseCache(this);
     closeBtn->setText("✕");
     closeBtn->setGeometry(350 - 32, 0, 28, 28);
     closeBtn->setStyleSheet("background-color: #2F2F38;color: #DFDFDF; font-size: 18px; border: none;");
     connect(closeBtn, &QPushButton::clicked, this, &QWidget::close);
-    connect(closeBtn, SIGNAL(hovered()), this, SLOT(catchHoverCls()));
-    connect(closeBtn, SIGNAL(unhovered()), this, SLOT(catchUnHoverCls()));
     isPower = false;
     INPUT = "";
     ResultLab = new QLabel(this);
     ResultLab->setGeometry(15, 50, 320, 54);
     ResultLab->setStyleSheet("color: #DFDFDF; font-size: 32px; background-color: #30303F; border-radius: 8px;");
-    btn1 = new QPushButton("1", this);
-    btn2 = new QPushButton("2", this);
-    btn3 = new QPushButton("3", this);
-    btn4 = new QPushButton("4", this);
-    btn5 = new QPushButton("5", this);
-    btn6 = new QPushButton("6", this);
-    btn7 = new QPushButton("7", this);
-    btn8 = new QPushButton("8", this);
-    btn9 = new QPushButton("9", this);
-    btn0 = new QPushButton("0", this);
-    btnSqrt = new QPushButton("√", this);
-    btnFact = new QPushButton("!", this);
-    btnRes = new QPushButton("=", this);
-    btnAC = new QPushButton("AC", this);
-    btnPlus = new QPushButton("+", this);
-    btnCon = new QPushButton("-", this);
-    btnDiv = new QPushButton("÷", this);
-    btnMult = new QPushButton("×", this);
-    btnOpnBrck = new QPushButton("(", this);
-    btnClsBrck = new QPushButton(")", this);
-    btnPwr = new QPushButton("xʸ", this);
+    btnDel = new MouseCache(this);
+    btn1 = new MouseCache(this);
+    btn2 = new MouseCache(this);
+    btn3 = new MouseCache(this);
+    btn4 = new MouseCache(this);
+    btn5 = new MouseCache(this);
+    btn6 = new MouseCache(this);
+    btn7 = new MouseCache(this);
+    btn8 = new MouseCache(this);
+    btn9 = new MouseCache(this);
+    btn0 = new MouseCache(this);
+    btnSqrt = new MouseCache(this);
+    btnFact = new MouseCache(this);
+    btnRes = new MouseCache(this);
+    btnAC = new MouseCache(this);
+    btnPlus = new MouseCache(this);
+    btnCon = new MouseCache(this);
+    btnDiv = new MouseCache(this);
+    btnMult = new MouseCache(this);
+    btnOpnBrck = new MouseCache(this);
+    btnClsBrck = new MouseCache(this);
+    btnPwr = new MouseCache(this);
+    btnDel->setText("DEL");
+    btn1->setText("1");
+    btn2->setText("2");
+    btn3->setText("3");
+    btn4->setText("4");
+    btn5->setText("5");
+    btn6->setText("6");
+    btn7->setText("7");
+    btn8->setText("8");
+    btn9->setText("9");
+    btn0->setText("0");
+    btnPlus->setText("+");
+    btnCon->setText("-");
+    btnDiv->setText("/");
+    btnMult->setText("*");
+    btnRes->setText("=");
+    btnOpnBrck->setText("(");
+    btnClsBrck->setText(")");
+    btnPwr->setText("xʸ");
+    btnSqrt->setText("√");
+    btnFact->setText("!");
+    btnAC->setText("AC");
     btnOpnBrck->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
+    btnDel->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
     btnClsBrck->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
     btn1->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
+    btnDel->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btnDel->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btn1->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btn1->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btn2->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btn2->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btn3->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btn3->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btn4->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btn4->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btn5->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btn5->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btn6->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btn6->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btn7->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btn7->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btn8->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btn8->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btn9->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btn9->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btn0->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btn0->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btnPlus->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btnPlus->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btnDiv->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btnDiv->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btnMult->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btnMult->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btnCon->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btnCon->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btnSqrt->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btnSqrt->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btnFact->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btnFact->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btnOpnBrck->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btnOpnBrck->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btnClsBrck->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btnClsBrck->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btnRes->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 32px;";
+    btnRes->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 35px;font-size: 32px;";
+    btnPwr->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btnPwr->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btnAC->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btnAC->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 35px;font-size: 24px;";
     btn2->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
     btn3->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
     btn4->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
@@ -81,6 +145,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     btnAC->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
     btnPwr->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
     btnPwr->setGeometry(180, 480, 70, 70);
+    btnDel->setGeometry(260, 480, 70, 70);
     btnOpnBrck->setGeometry(180, 560, 70, 70);
     btnClsBrck->setGeometry(260, 560, 70, 70);
     btn0->setGeometry(20, 480, 150, 70);
@@ -93,7 +158,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     btn1->setGeometry(20, 400, 70, 70);
     btn2->setGeometry(100, 400, 70, 70);
     btn3->setGeometry(180, 400, 70, 70);
-    btnAC->setGeometry(260, 400, 70, 150);
+    btnAC->setGeometry(260, 400, 70, 70);
     btnRes->setGeometry(260, 240, 70, 150);
     btn4->setGeometry(20, 320, 70, 70);
     btn5->setGeometry(100, 320, 70, 70);
@@ -126,6 +191,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     connect(btnOpnBrck, SIGNAL(clicked()), this, SLOT(addStrOpnBrck()));
     connect(btnClsBrck, SIGNAL(clicked()), this, SLOT(addStrClsBrck()));
     connect(btnPwr, SIGNAL(clicked()), this, SLOT(addStrPwr()));
+    connect(btnDel, SIGNAL(clicked()), this, SLOT(delStr()));
 }
 QString MainWindow::Calculate(QString RawInput)
 {
@@ -772,22 +838,6 @@ void MainWindow::addStrPwr()
     INPUT += "^";
     isPower = true;
 }
-void MainWindow::catchHoverMin()
-{
-    minBtn->setStyleSheet("background-color: #CACAD3;color: #DFDFDF; font-size: 18px; border: none;");
-}
-void MainWindow::catchUnHoverMin()
-{
-    minBtn->setStyleSheet("background-color: #2F2F38;color: #DFDFDF; font-size: 18px; border: none;");
-}
-void MainWindow::catchHoverCls()
-{
-    closeBtn->setStyleSheet("background-color: #CACAD3;color: #DFDFDF; font-size: 18px; border: none;");
-}
-void MainWindow::catchUnHoverCls()
-{
-    closeBtn->setStyleSheet("background-color: #2F2F38;color: #DFDFDF; font-size: 18px; border: none;");
-}
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     if(!event->text().isEmpty())
@@ -817,4 +867,31 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         addStrRes();
     }
     if(event->key() == Qt::Key_Backspace){addStrAC();}
+}
+void MainWindow::delStr()
+{
+    if(INPUT != "")
+    {
+        QString sum = "";
+        for(int i = 0; i < INPUT.length() - 1; i++)
+        {
+            sum += INPUT[i];
+        }
+        INPUT = sum;
+        sum = "";
+        if(INPUT[INPUT.length() - 1] == '^')
+        {
+            for(int i = 0; i < INPUT.length() - 1; i++)
+            {
+                sum += INPUT[i];
+            }
+            INPUT = sum;
+        }
+        sum = "";
+        for(int i = 0; i < ResultLab->text().length() - 1; i++)
+        {
+            sum += ResultLab->text()[i];
+        }
+        ResultLab->setText(sum);
+    }
 }
