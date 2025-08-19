@@ -10,6 +10,8 @@
 #include "MouseCache.h"
 #include <QKeyEvent>
 
+bool opnPwrBr = false;
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
     setFocus();
@@ -69,8 +71,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     btn0->setText("0");
     btnPlus->setText("+");
     btnCon->setText("-");
-    btnDiv->setText("/");
-    btnMult->setText("*");
+    btnDiv->setText("÷");
+    btnMult->setText("×");
     btnRes->setText("=");
     btnOpnBrck->setText("(");
     btnClsBrck->setText(")");
@@ -849,47 +851,49 @@ void MainWindow::addStrPlus()
 {
     INPUT += "+";
     QString summary = ResultLab->text();
-    summary += "+";
+    summary += opnPwrBr ? "<sup>+</sup>" : "+";
     ResultLab->setText(summary);
-    isPower = false;
+    isPower = opnPwrBr ? true : false;
 }
 void MainWindow::addStrCon()
 {
     INPUT += "-";
     QString summary = ResultLab->text();
-    summary += "-";
+    summary += isPower ? "⁻" : "-";
+    if(INPUT[INPUT.length() - 2] != '^'){isPower = false; summary[summary.length() - 1] = '-';}
     ResultLab->setText(summary);
-    isPower = false;
 }
 void MainWindow::addStrDiv()
 {
     INPUT += "/";
     QString summary = ResultLab->text();
-    summary += "÷";
+    summary += opnPwrBr ? "<sup>÷</sup>" : "÷";
     ResultLab->setText(summary);
-    isPower = false;
+    isPower = opnPwrBr ? true : false;
 }
 void MainWindow::addStrMult()
 {
     INPUT += "*";
     QString summary = ResultLab->text();
-    summary += "×";
+    summary += opnPwrBr ? "<sup>×</sup>" : "×";
     ResultLab->setText(summary);
-    isPower = false;
+    isPower = opnPwrBr ? true : false;
 }
 void MainWindow::addStrOpnBrck()
 {
     INPUT += "(";
     QString summary = ResultLab->text();
-    summary += "(";
+    summary += isPower ? "⁽" : "(";
+    opnPwrBr = isPower ? true : false;
     ResultLab->setText(summary);
-    isPower = false;
+    isPower = opnPwrBr ? true : false;
 }
 void MainWindow::addStrClsBrck()
 {
     INPUT += ")";
     QString summary = ResultLab->text();
-    summary += ")";
+    summary += opnPwrBr ? "⁾" : ")";
+    opnPwrBr = false;
     ResultLab->setText(summary);
     isPower = false;
 }
