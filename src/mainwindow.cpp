@@ -222,7 +222,7 @@ QString MainWindow::Calculate(QString RawInput)
     QMessageBox warnParse;
     warnParse.setText("Syntax error");
     warnParse.setWindowTitle("Error");
-    int firstopnum = 0, veryfirstopnum = 0, lastopnum = 0, opin = -1, startop = 0, endop = 0, next = 0, parannum = 0, innerparannum = 0, paranin = -1;
+    int functopnum = 0, firstopnum = 0, veryfirstopnum = 0, lastopnum = 0, opin = -1, startop = 0, endop = 0, next = 0, parannum = 0, innerparannum = 0, paranin = -1;
     QString AraInput = "";
     bool startBabo = false, abesod = true;
     for (int i = 0; i < RawInput.length(); i++)
@@ -323,7 +323,7 @@ QString MainWindow::Calculate(QString RawInput)
     }
     for (int i = 0; i < RawInput.length(); i++)
     {
-        if (RawInput[i] == '*' || RawInput[i] == '/' || RawInput[i] == '!')
+        if (RawInput[i] == '*' || RawInput[i] == '/')
         {
             opin = i;
             firstopnum++;
@@ -338,12 +338,89 @@ QString MainWindow::Calculate(QString RawInput)
             opin = i;
             veryfirstopnum++;
         }
+        else if(RawInput[i] == '!')
+        {
+            functopnum++;
+            opin = i;
+        }
     }
+    for(int i = functopnum; i > 0; i--)
+    {
+        bool facto = true;
+        QString sum = "";
+        for (int x = 0; x < RawInput.length(); x++)
+        {
+            if (RawInput[x] == '!')
+            {
+                opin = x;
+                facto = true;
+                break;
+            }
+        }
+        if (facto)
+        {
+            endop = opin;
+        }
+        for (int x = opin - 1; x >= 0; x--)
+        {
+            if (RawInput[x] == '+' || RawInput[x] == '/' || RawInput[x] == '*' || RawInput[x] == '-' && x > 0)
+            {
+                if(RawInput[x - 1] != '-')
+                {
+                    startop = x + 1;
+                    break;
+                }
+            }
+            else if(x == 0){startop = 0;}
+
+        }
+        for (int x = startop; x < endop; x++)
+        {
+            sum += RawInput[x];
+        }
+
+        for (int x = 0; x < RawInput.length(); x++)
+        {
+            if (x < startop || x > endop)
+            {
+                AraInput += RawInput[x];
+            }
+            else if (x == startop)
+            {
+                double a, b;
+                QString rawx = "", rawy = "";
+                QChar op;
+                bool xturn = true;
+                rawx = sum;
+                if (TryParse(rawx) && facto)
+                {
+                    int sumFact = rawx.toInt();
+                    if (sumFact < 0) sumFact = 0;
+                    int res = 1;
+                    for (int v = sumFact; v > 1; v--)
+                    {
+                        res *= v;
+                    }
+                    AraInput += QString::number(res);
+                }
+                else{warnParse.exec(); RawInput = ""; AraInput = "";}
+            }
+        }
+        RawInput = AraInput;
+        AraInput = "";
+        sum = "";
+        endop = 0;
+        startop = 0;
+        opin = 0;
+    }
+    next = 0;
+    opin = 0;
+    AraInput = "";
     for (int i = veryfirstopnum; i > 0; i--)
     {
         QString sum = "";
         bool squareroot = false;
-        for (int x = next; x < RawInput.length(); x++)
+        for (int x = 0; x < RawInput.length(); x++)
         {
             if (RawInput[x] == '^' || RawInput[x] == 'v')
             {
@@ -472,7 +549,6 @@ QString MainWindow::Calculate(QString RawInput)
     AraInput = "";
     for (int i = firstopnum; i > 0; i--)
     {
-        bool facto = false;
         QString sum = "";
         for (int x = next; x < RawInput.length(); x++)
         {
@@ -481,14 +557,8 @@ QString MainWindow::Calculate(QString RawInput)
                 opin = x;
                 break;
             }
-            else if (RawInput[x] == '!')
-            {
-                opin = x;
-                facto = true;
-                break;
-            }
         }
-        for (int x = opin + 1; x < RawInput.length() && !facto; x++)
+        for (int x = opin + 1; x < RawInput.length(); x++)
         {
             if (RawInput[x] == '+' || RawInput[x] == '/' || RawInput[x] == '*' || (RawInput[x] == '-' && x != opin + 1))
             {
@@ -500,10 +570,6 @@ QString MainWindow::Calculate(QString RawInput)
                 endop = x;
                 break;
             }
-        }
-        if (facto)
-        {
-            endop = opin;
         }
         for (int x = opin - 1; x >= 0; x--)
         {
@@ -533,7 +599,7 @@ QString MainWindow::Calculate(QString RawInput)
                 QString rawx = "", rawy = "";
                 QChar op;
                 bool xturn = true;
-                for (int q = 0; q < sum.length() && !facto; q++)
+                for (int q = 0; q < sum.length(); q++)
                 {
                     if (sum[q] == '*' || sum[q] == '/')
                     {
@@ -549,11 +615,8 @@ QString MainWindow::Calculate(QString RawInput)
                         rawy += sum[q];
                     }
                 }
-                for (int q = 0; q < sum.length() - 1 && facto; q++)
-                {
-                    rawx += sum[q];
-                }
-                if (TryParse(rawx) && TryParse(rawy) && !facto)
+
+                if (TryParse(rawx) && TryParse(rawy))
                 {
                     if (rawx.length() > 1 && rawx[0] == '0' && rawx != "0" && rawx[1] != '.' && rawx[1] != ',')
                     {
@@ -581,17 +644,6 @@ QString MainWindow::Calculate(QString RawInput)
                         AraInput += QString::fromStdString(ss.str());
                         int absfg = 0;
                     }
-                }
-                else if (TryParse(rawx) && facto)
-                {
-                    int sumFact = rawx.toInt();
-                    if (sumFact < 0) sumFact = 0;
-                    int res = 1;
-                    for (int v = sumFact; v > 1; v--)
-                    {
-                        res *= v;
-                    }
-                    AraInput += QString::number(res);
                 }
                 else{warnParse.exec(); RawInput = ""; AraInput = "";}
             }
