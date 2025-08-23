@@ -9,9 +9,32 @@
 #include <QBoxLayout>
 #include "MouseCache.h"
 #include <QKeyEvent>
-
-bool opnPwrBr = false;
-
+#include <QMouseEvent>
+#include <QPoint>
+#include <QPointF>
+QPointF dragPos;
+bool opnPwrBr = false, isDraggin = false;
+void MainWindow::mousePressEvent(QMouseEvent *event)
+{
+    if(event->button() == Qt::LeftButton)
+    {
+        isDraggin = true;
+        dragPos = event->globalPosition() - frameGeometry().topLeft();
+        event->accept();
+    }
+}
+void MainWindow::mouseMoveEvent(QMouseEvent *event)
+{
+    if(isDraggin)
+    {
+        MainWindow::move(event->globalPosition().toPoint() - dragPos.toPoint());
+        event->accept();
+    }
+}
+void MainWindow::mouseReleaseEvent(QMouseEvent *event)
+{
+    isDraggin = false;
+}
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
     setFocus();
