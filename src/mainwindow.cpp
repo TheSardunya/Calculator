@@ -371,7 +371,7 @@ QString MainWindow::Calculate(QString RawInput)
     }
     for(int i = functopnum; i > 0; i--)
     {
-        bool facto = true;
+        bool facto = false;
         QString sum = "";
         for (int x = 0; x < RawInput.length(); x++)
         {
@@ -388,7 +388,7 @@ QString MainWindow::Calculate(QString RawInput)
         }
         for (int x = opin - 1; x >= 0; x--)
         {
-            if (RawInput[x] == '+' || RawInput[x] == '/' || RawInput[x] == '*' || RawInput[x] == '-' && x > 0)
+            if (RawInput[x] == '+' || RawInput[x] == '/' || RawInput[x] == '^' || RawInput[x] == '*' || RawInput[x] == '-' && x > 0)
             {
                 if(RawInput[x - 1] != '-')
                 {
@@ -438,7 +438,6 @@ QString MainWindow::Calculate(QString RawInput)
         startop = 0;
         opin = 0;
     }
-    next = 0;
     opin = 0;
     AraInput = "";
     for (int i = veryfirstopnum; i > 0; i--)
@@ -932,9 +931,9 @@ void MainWindow::addStrFact()
 {
     INPUT += "!";
     QString summary = ResultLab->text();
-    summary += "!";
+    summary += isPower ? "<sup>!</sup>" : "!";
     ResultLab->setText(summary);
-    isPower = false;
+    isPower = opnPwrBr ? true : false;
 }
 void MainWindow::addStrPwr()
 {
