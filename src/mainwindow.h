@@ -41,6 +41,7 @@ private slots:
     void addStrPwr();
     void addStrSqrt();
     void addStrFact();
+    void addStrDot();
     void delStr();
 protected:
     void keyPressEvent(QKeyEvent *event) override;
@@ -52,6 +53,7 @@ private:
     QString INPUT;
     QLineEdit *InputBox;
     QLabel *ResultLab;
+    MouseCache *btnDot;
     MouseCache *btnDel;
     MouseCache *btnOpnBrck;
     MouseCache *btnClsBrck;

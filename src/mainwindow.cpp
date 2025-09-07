@@ -48,7 +48,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     minBtn->setGeometry(350 - 64, 0, 28, 28);
     minBtn->setStyleSheet("background-color: #2F2F38;color: #DFDFDF; font-size: 18px; border: none;");
     connect(minBtn, &QPushButton::clicked, this, &QWidget::showMinimized);
-
+    btnDot = new MouseCache(this);
+    btnDot->setText(".");
+    btnDot->setGeometry(100, 480, 70, 70);
+    btnDot->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 32px;");
+    btnDot->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 32px;";
+    btnDot->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 35px;font-size: 32px;";
+    btnDot->cssClick = "background-color: #4A4A51; color: #DADADA; border-radius: 35px; font-size: 24px;";
     closeBtn = new MouseCache(this);
     closeBtn->setText("✕");
     closeBtn->setGeometry(350 - 32, 0, 28, 28);
@@ -197,7 +203,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     btnDel->setGeometry(260, 480, 70, 70);
     btnOpnBrck->setGeometry(180, 560, 70, 70);
     btnClsBrck->setGeometry(260, 560, 70, 70);
-    btn0->setGeometry(20, 480, 150, 70);
+    btn0->setGeometry(20, 480, 70, 70);
     btnSqrt->setGeometry(20, 560, 70, 70);
     btnFact->setGeometry(100, 560, 70, 70);
     btnPlus->setGeometry(20, 160, 70, 70);
@@ -219,6 +225,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     this->resize(350, 680);
     this->setStyleSheet("background-color: #101018");
     this->setWindowIcon(QIcon(":/icons/calculator.ico"));
+    connect(btnDot, SIGNAL(clicked()), this, SLOT(addStrDot()));
     connect(btn0, SIGNAL(clicked()), this, SLOT(addStr0()));
     connect(btn1, SIGNAL(clicked()), this, SLOT(addStr1()));
     connect(btn2, SIGNAL(clicked()), this, SLOT(addStr2()));
@@ -910,6 +917,13 @@ void MainWindow::addStrOpnBrck()
     ResultLab->setText(summary);
     isPower = opnPwrBr ? true : false;
 }
+void MainWindow::addStrDot()
+{
+    INPUT += ".";
+    QString summary = ResultLab->text();
+    summary += isPower ? "<sup>.</sup>" : ".";
+    ResultLab->setText(summary);
+}
 void MainWindow::addStrClsBrck()
 {
     INPUT += ")";
@@ -963,6 +977,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         else if(event->text() == "*"){addStrMult();}
         else if(event->text() == "!"){addStrFact();}
         else if(event->text() == "√"){addStrSqrt();}
+        else if(event->text() == "."){addStrDot();}
     }
     if(event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
     {
