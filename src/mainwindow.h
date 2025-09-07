@@ -6,6 +6,7 @@
 #include "MouseCache.h"
 #include <QPushButton>
 #include <QKeyEvent>
+#include <cmath>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
