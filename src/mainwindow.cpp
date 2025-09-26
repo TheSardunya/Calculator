@@ -366,12 +366,12 @@ QString MainWindow::Calculate(QString RawInput)
             opin = i;
             lastopnum++;
         }
-        else if (RawInput[i] == '^' || RawInput[i] == 'v')
+        else if (RawInput[i] == '^')
         {
             opin = i;
             veryfirstopnum++;
         }
-        else if(RawInput[i] == '!')
+        else if(RawInput[i] == '!' || RawInput[i] == 'v')
         {
             functopnum++;
             opin = i;
@@ -379,7 +379,7 @@ QString MainWindow::Calculate(QString RawInput)
     }
     for(int i = functopnum; i > 0; i--)
     {
-        bool facto = false;
+        bool facto = false, square = false;
         QString sum = "";
         for (int x = 0; x < RawInput.length(); x++)
         {
@@ -389,12 +389,14 @@ QString MainWindow::Calculate(QString RawInput)
                 facto = true;
                 break;
             }
+			else if (RawInput[x] == 'v'){opin = x; square = true; break;}
         }
         if (facto)
         {
             endop = opin;
         }
-        for (int x = opin - 1; x >= 0; x--)
+		else if(square){startop = opin;}
+        for (int x = opin - 1; x >= 0 && facto; x--)
         {
             if (RawInput[x] == '+' || RawInput[x] == '/' || RawInput[x] == '^' || RawInput[x] == '*' || RawInput[x] == '-' && x > 0)
             {
@@ -407,12 +409,25 @@ QString MainWindow::Calculate(QString RawInput)
             else if(x == 0){startop = 0;}
 
         }
-        for (int x = startop; x < endop; x++)
+		for (int x = opin + 1; x < RawInput.length() && square; x++)
+		{
+			if (RawInput[x] == '+' || RawInput[x] == '/' || RawInput[x] == '^' || RawInput[x] == '*' || RawInput[x] == '-' && x > 0)
+            {
+                if(RawInput[x + 1] != '-')
+                {
+                    endop = x - 1;
+                    break;
+                }
+            }
+            else if(x == RawInput.length() - 1){endop = RawInput.length() - 1;}
+		}
+		
+        for (int x = startop; x < endop && facto; x++)
         {
             sum += RawInput[x];
         }
-
-        for (int x = 0; x < RawInput.length(); x++)
+		for (int x = startop + 1; x <= endop && square; x++){sum += RawInput[x];}
+        for (int x = 0; x < RawInput.length() && facto; x++)
         {
             if (x < startop || x > endop)
             {
@@ -439,6 +454,21 @@ QString MainWindow::Calculate(QString RawInput)
                 else{warnParse.exec(); RawInput = ""; AraInput = "";}
             }
         }
+		for (int x = 0; x < RawInput.length() && square; x++)
+		{
+			if (x < startop || x > endop)
+            {
+                AraInput += RawInput[x];
+            }
+			else if (x == startop)
+			{
+				QString rawx = sum;
+				QString output = QString::number(x);
+				if(TryParse(rawx)){double x = rawx.toDouble();x = sqrt(x);AraInput += QString::number(x);}
+				else{warnParse.exec(); RawInput = ""; AraInput = "";}
+			}
+			
+		}
         RawInput = AraInput;
         AraInput = "";
         sum = "";
@@ -451,12 +481,10 @@ QString MainWindow::Calculate(QString RawInput)
     for (int i = veryfirstopnum; i > 0; i--)
     {
         QString sum = "";
-        bool squareroot = false;
         for (int x = 0; x < RawInput.length(); x++)
         {
-            if (RawInput[x] == '^' || RawInput[x] == 'v')
+            if (RawInput[x] == '^')
             {
-                if(RawInput[x] == 'v'){squareroot = true;}
                 opin = x;
                 break;
             }
@@ -474,7 +502,7 @@ QString MainWindow::Calculate(QString RawInput)
                 break;
             }
         }
-        for (int x = opin - 1; x >= 0 && !squareroot; x--)
+        for (int x = opin - 1; x >= 0; x--)
         {
             if (RawInput[x] == '+' || RawInput[x] == '/' || RawInput[x] == '*' || (RawInput[x] == '-' && x > 0 && RawInput[x - 1] != '-' && x != 0))
             {
@@ -487,12 +515,7 @@ QString MainWindow::Calculate(QString RawInput)
                 break;
             }
         }
-        if(squareroot){startop = opin;}
-        for (int x = startop; x <= endop && !squareroot; x++)
-        {
-            sum += RawInput[x];
-        }
-        for(int x = startop + 1; x <= endop && squareroot; x++)
+        for (int x = startop; x <= endop; x++)
         {
             sum += RawInput[x];
         }
@@ -502,7 +525,7 @@ QString MainWindow::Calculate(QString RawInput)
             {
                 AraInput += RawInput[x];
             }
-            else if (x == startop && !squareroot)
+            else if (x == startop)
             {
                 double a, b;
                 QString rawx, rawy;
@@ -541,11 +564,6 @@ QString MainWindow::Calculate(QString RawInput)
 					if(!xparanted && a < 0){AraInput += QString::number(0 - pow(a, b));}
 					else{AraInput += QString::number(pow(a, b));}
                 }
-                else{warnParse.exec(); RawInput = ""; AraInput = "";}
-            }
-            else if(x == startop && squareroot)
-            {
-                if(TryParse(sum)){AraInput += QString::number(sqrt(sum.toDouble()));}
                 else{warnParse.exec(); RawInput = ""; AraInput = "";}
             }
         }
@@ -919,9 +937,9 @@ void MainWindow::addStrSqrt()
 {
     INPUT += "v";
     QString summary = ResultLab->text();
-    summary += "√";
+    summary += opnPwrBr ? "<sup>√</sup>" : "√";
     ResultLab->setText(summary);
-    isPower = false;
+    isPower = opnPwrBr;
 }
 void MainWindow::addStrFact()
 {
