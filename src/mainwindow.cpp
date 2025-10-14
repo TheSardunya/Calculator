@@ -561,7 +561,7 @@ QString MainWindow::Calculate(QString RawInput)
                     }
                     a = rawx.toDouble();
                     b = rawy.toDouble();
-					if(!xparanted && a < 0){AraInput += QString::number(0 - pow(a, b));}
+					if(!xparanted && a < 0){double resultD = pow(a,b);if(resultD > 0){resultD = 0 - resultD;};AraInput += QString::number(resultD);}
 					else{AraInput += QString::number(pow(a, b));}
                 }
                 else{warnParse.exec(); RawInput = ""; AraInput = "";}
