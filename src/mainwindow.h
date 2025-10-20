@@ -18,6 +18,7 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
+    QString Calculate(QString);
     explicit MainWindow(QWidget *parent = nullptr);
 private slots:
     void StringSet();
@@ -31,6 +32,9 @@ private slots:
     void addStr8();
     void addStr9();
     void addStr0();
+    void addStrX();
+    void addStrY();
+    void addStrZ();
     void addStrAC();
     void addStrRes();
     void addStrPlus();
@@ -44,16 +48,20 @@ private slots:
     void addStrFact();
     void addStrDot();
     void delStr();
+    void defChMode();
 protected:
     void keyPressEvent(QKeyEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
 private:
-    QString Calculate(QString);
     QString INPUT;
     QLineEdit *InputBox;
     QLabel *ResultLab;
+    MouseCache *btnX;
+    MouseCache *btnY;
+    MouseCache *btnZ;
+    MouseCache *btnDfn;
     MouseCache *btnDot;
     MouseCache *btnDel;
     MouseCache *btnOpnBrck;

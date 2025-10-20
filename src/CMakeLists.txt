@@ -23,7 +23,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Calculator
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        mainwindow.cpp mainwindow.h mainwindow.ui
+
         oreno.cpp oreno.h
 
         ac.qrc
@@ -31,6 +31,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MouseCache.h
         MouseCache.h
         MouseCache.cpp
+        mainwindow.h mainwindow.cpp
+        definewindow.h definewindow.cpp
+
+
 
 
     )

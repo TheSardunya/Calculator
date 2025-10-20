@@ -1,18 +1,20 @@
 #include "mainwindow.h"
 #include "oreno.h"
+#include "definewindow.h"
 #include <QMessageBox>
 #include <QLineEdit>
 #include <QString>
 #include <QLabel>
 #include <cmath>
+#include <fstream>
 #include <sstream>
 #include <QBoxLayout>
 #include "MouseCache.h"
 #include <QKeyEvent>
+#include <QWidget>
 #include <QMouseEvent>
 #include <QPoint>
 #include <QPointF>
-#include <cmath>
 QPointF dragPos;
 bool opnPwrBr = false, isDraggin = false;
 void MainWindow::mousePressEvent(QMouseEvent *event)
@@ -44,6 +46,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     QWidget *titleBar = new QWidget(this);
     titleBar->setStyleSheet("background-color: #2F2F38;");
     titleBar->setGeometry(0, 0, 350, 32);
+    btnDfn = new MouseCache(this);
+    btnDfn->setText("Defines");
+    btnDfn->setGeometry(145, 125, 60, 20);
+    btnDfn->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 10px;font-size: 12px;");
+    btnDfn->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 10px;font-size: 12px;";
+    btnDfn->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 10px;font-size: 12px;";
+    btnDfn->cssClick = "background-color: #4A4A51; color: #DADADA; border-radius: 10px; font-size: 12px;";
     minBtn = new MouseCache(this);
     minBtn->setText("—");
     minBtn->setGeometry(350 - 64, 0, 28, 28);
@@ -55,7 +64,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     btnDot->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 32px;");
     btnDot->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 32px;";
     btnDot->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 35px;font-size: 32px;";
-    btnDot->cssClick = "background-color: #4A4A51; color: #DADADA; border-radius: 35px; font-size: 24px;";
+    btnDot->cssClick = "background-color: #4A4A51; color: #DADADA; border-radius: 35px; font-size: 32px;";
     closeBtn = new MouseCache(this);
     closeBtn->setText("✕");
     closeBtn->setGeometry(350 - 32, 0, 28, 28);
@@ -88,6 +97,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     btnOpnBrck = new MouseCache(this);
     btnClsBrck = new MouseCache(this);
     btnPwr = new MouseCache(this);
+    btnX = new MouseCache(this);
+    btnY = new MouseCache(this);
+    btnZ = new MouseCache(this);
     btnDel->setText("DEL");
     btn1->setText("1");
     btn2->setText("2");
@@ -110,6 +122,21 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     btnSqrt->setText("√");
     btnFact->setText("!");
     btnAC->setText("AC");
+    btnX->setText("𝑥");
+    btnY->setText("𝑦");
+    btnZ->setText("𝑧");
+    btnX->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
+    btnX->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btnX->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btnX->cssClick = "background-color: #4A4A51; color: #DADADA; border-radius: 35px; font-size: 24px;";
+    btnY->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
+    btnY->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btnY->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btnY->cssClick = "background-color: #4A4A51; color: #DADADA; border-radius: 35px; font-size: 24px;";
+    btnZ->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
+    btnZ->cssHvr = "background-color: #333341; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btnZ->cssUnHvr = "background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;";
+    btnZ->cssClick = "background-color: #4A4A51; color: #DADADA; border-radius: 35px; font-size: 24px;";
     btnOpnBrck->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
     btnDel->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
     btnClsBrck->setStyleSheet("background-color: #20202F; color: #DADADA; border-radius: 35px;font-size: 24px;");
@@ -204,8 +231,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     btnDel->setGeometry(260, 480, 70, 70);
     btnOpnBrck->setGeometry(180, 560, 70, 70);
     btnClsBrck->setGeometry(260, 560, 70, 70);
-    btn0->setGeometry(20, 480, 70, 70);
-    btnSqrt->setGeometry(20, 560, 70, 70);
+    btn0->setGeometry(20, 480, 70, 150);
+    btnSqrt->setGeometry(20, 640, 70, 70);
+    btnX->setGeometry(100, 640, 70, 70);
+    btnY->setGeometry(180, 640, 70, 70);
+    btnZ->setGeometry(260, 640, 70, 70);
     btnFact->setGeometry(100, 560, 70, 70);
     btnPlus->setGeometry(20, 160, 70, 70);
     btnCon->setGeometry(100, 160, 70, 70);
@@ -223,9 +253,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     btn8->setGeometry(100, 240, 70, 70);
     btn9->setGeometry(180, 240, 70, 70);
     this->setWindowTitle("Calculator");
-    this->resize(350, 680);
+    this->resize(350, 760);
     this->setStyleSheet("background-color: #101018");
     this->setWindowIcon(QIcon(":/icons/calculator.ico"));
+    connect(btnX, SIGNAL(clicked()), this, SLOT(addStrX()));
+    connect(btnY, SIGNAL(clicked()), this, SLOT(addStrY()));
+    connect(btnZ, SIGNAL(clicked()), this, SLOT(addStrZ()));
     connect(btnDot, SIGNAL(clicked()), this, SLOT(addStrDot()));
     connect(btn0, SIGNAL(clicked()), this, SLOT(addStr0()));
     connect(btn1, SIGNAL(clicked()), this, SLOT(addStr1()));
@@ -249,6 +282,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     connect(btnClsBrck, SIGNAL(clicked()), this, SLOT(addStrClsBrck()));
     connect(btnPwr, SIGNAL(clicked()), this, SLOT(addStrPwr()));
     connect(btnDel, SIGNAL(clicked()), this, SLOT(delStr()));
+    connect(btnDfn, SIGNAL(clicked()), this, SLOT(defChMode()));
 }
 QString MainWindow::Calculate(QString RawInput)
 {
@@ -978,12 +1012,78 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         else if(event->text() == "!"){addStrFact();}
         else if(event->text() == "√"){addStrSqrt();}
         else if(event->text() == "."){addStrDot();}
+        else if(event->text() == "x"){addStrX();}
+        else if(event->text() == "y"){addStrY();}
+        else if(event->text() == "z"){addStrZ();}
     }
     if(event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
     {
         addStrRes();
     }
     if(event->key() == Qt::Key_Backspace){addStrAC();}
+}
+void MainWindow::addStrX()
+{
+    QMessageBox *warnDef;
+    warnDef = new QMessageBox(this);
+    warnDef->setText("Error : 𝑥 is not defined, please define the 𝑥 in the defines menu.");
+    warnDef->setWindowTitle("Define Error!");
+    QString sum = isPower ? ResultLab->text() + "<sup>𝑥</sup>" : ResultLab->text() + "𝑥";
+    std::ifstream fileIn;
+    int defCount = 0;
+    std::string humm = "";
+    fileIn.open("defines.txt");
+    while(fileIn && fileIn >> humm){
+        defCount++;
+    }
+    fileIn.close();
+    fileIn.open("defines.txt");
+    std::string umm = "";
+    if(fileIn && defCount >= 1){fileIn >> umm; ResultLab->setText(sum); INPUT += QString::fromStdString(umm);}
+    else{warnDef->exec();}
+    fileIn.close();
+}
+void MainWindow::addStrY()
+{
+    QMessageBox *warnDef;
+    warnDef = new QMessageBox(this);
+    warnDef->setText("Error : 𝑦 is not defined, please define the 𝑦 in the defines menu.");
+    warnDef->setWindowTitle("Define Error!");
+    QString sum = isPower ? ResultLab->text() + "<sup>𝑦</sup>" : ResultLab->text() + "𝑦";
+    std::ifstream fileIn;
+    int defCount = 0;
+    std::string humm = "";
+    fileIn.open("defines.txt");
+    while(fileIn && fileIn >> humm){
+        defCount++;
+    }
+    fileIn.close();
+    fileIn.open("defines.txt");
+    std::string umm = "";
+    if(fileIn && defCount >= 2){fileIn >> umm; fileIn >> umm; ResultLab->setText(sum); INPUT += QString::fromStdString(umm);}
+    else{warnDef->exec();}
+    fileIn.close();
+}
+void MainWindow::addStrZ()
+{
+    QMessageBox *warnDef;
+    warnDef = new QMessageBox(this);
+    warnDef->setText("Error : 𝑧 is not defined, please define the 𝑧 in the defines menu.");
+    warnDef->setWindowTitle("Define Error!");
+    QString sum = isPower ? ResultLab->text() + "<sup>𝑧</sup>" : ResultLab->text() + "𝑧";
+    std::ifstream fileIn;
+    int defCount = 0;
+    std::string humm = "";
+    fileIn.open("defines.txt");
+    while(fileIn && fileIn >> humm){
+        defCount++;
+    }
+    fileIn.close();
+    fileIn.open("defines.txt");
+    std::string umm = "";
+    if(fileIn && defCount >= 3){fileIn >> umm; fileIn >> umm; fileIn >> umm;ResultLab->setText(sum); INPUT += QString::fromStdString(umm);}
+    else{warnDef->exec();}
+    fileIn.close();
 }
 void MainWindow::delStr()
 {
@@ -1011,4 +1111,9 @@ void MainWindow::delStr()
         }
         ResultLab->setText(sum);
     }
+}
+void MainWindow::defChMode()
+{
+    DefineWindow *dfn = new DefineWindow();
+    dfn->show();
 }
