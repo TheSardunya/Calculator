@@ -357,6 +357,9 @@ QString MainWindow::Calculate(QString RawInput)
                 }
                 else{warnParse.exec(); RawInput = ""; AraInput = "";}
             }
+            else if(IRawInput.length() > 0 && IRawInput[0] == 'v'){
+					IRawInput = Calculate(IRawInput);
+			}
             for (int x = 0; x < RawInput.length(); x++)
             {
                 if (x < startparan || x > endparan)
