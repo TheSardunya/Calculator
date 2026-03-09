@@ -6,7 +6,8 @@
 #include <QString>
 #include <QLabel>
 #include <cmath>
-#include <fstream>
+#include <QFile>
+#include <QTextStream>
 #include <sstream>
 #include <QBoxLayout>
 #include "MouseCache.h"
@@ -15,6 +16,7 @@
 #include <QMouseEvent>
 #include <QPoint>
 #include <QPointF>
+#include <QDebug>
 QPointF dragPos;
 bool opnPwrBr = false, isDraggin = false;
 void MainWindow::mousePressEvent(QMouseEvent *event)
@@ -1032,19 +1034,36 @@ void MainWindow::addStrX()
     warnDef->setText("Error : 𝑥 is not defined, please define the 𝑥 in the defines menu.");
     warnDef->setWindowTitle("Define Error!");
     QString sum = isPower ? ResultLab->text() + "<sup>𝑥</sup>" : ResultLab->text() + "𝑥";
-    std::ifstream fileIn;
+    QFile defineFile("defines.txt");
     int defCount = 0;
-    std::string humm = "";
-    fileIn.open("defines.txt");
-    while(fileIn && fileIn >> humm){
-        defCount++;
+    if(defineFile.open(QFile::ReadOnly))
+    {
+        QTextStream input(&defineFile);
+        while(!input.atEnd()){
+            input.readLine();
+            defCount++;
+        }
+        QString um = "";
+        defineFile.close();
+        QFile defineFile2("defines.txt");
+        if(defineFile2.open(QFile::ReadOnly))
+        {
+            QTextStream in(&defineFile2);
+            if(defCount >= 2)
+            {
+                while(!in.atEnd()){
+                    um = in.readLine();
+                    break;
+                }
+                ResultLab->setText(sum); INPUT += um;
+            }
+            else{warnDef->exec();}
+        }
+        else{warnDef->exec();}
+        defineFile2.close();
     }
-    fileIn.close();
-    fileIn.open("defines.txt");
-    std::string umm = "";
-    if(fileIn && defCount >= 1){fileIn >> umm; ResultLab->setText(sum); INPUT += QString::fromStdString(umm);}
     else{warnDef->exec();}
-    fileIn.close();
+    defineFile.close();
 }
 void MainWindow::addStrY()
 {
@@ -1053,19 +1072,40 @@ void MainWindow::addStrY()
     warnDef->setText("Error : 𝑦 is not defined, please define the 𝑦 in the defines menu.");
     warnDef->setWindowTitle("Define Error!");
     QString sum = isPower ? ResultLab->text() + "<sup>𝑦</sup>" : ResultLab->text() + "𝑦";
-    std::ifstream fileIn;
+    QFile defineFile("defines.txt");
     int defCount = 0;
-    std::string humm = "";
-    fileIn.open("defines.txt");
-    while(fileIn && fileIn >> humm){
-        defCount++;
+    if(defineFile.open(QFile::ReadOnly))
+    {
+        QTextStream input(&defineFile);
+        while(!input.atEnd()){
+            input.readLine();
+            defCount++;
+        }
+        QString um = "";
+        defineFile.close();
+        QFile defineFile2("defines.txt");
+        if(defineFile2.open(QFile::ReadOnly))
+        {
+            QTextStream in(&defineFile2);
+            if(defCount >= 2)
+            {
+                int i = 0;
+                while(!in.atEnd()){
+                    i++;
+                    um = in.readLine();
+                    if(i == 2){
+                        break;
+                    }
+                }
+                ResultLab->setText(sum); INPUT += um;
+            }
+            else{warnDef->exec();}
+        }
+        else{warnDef->exec();}
+        defineFile2.close();
     }
-    fileIn.close();
-    fileIn.open("defines.txt");
-    std::string umm = "";
-    if(fileIn && defCount >= 2){fileIn >> umm; fileIn >> umm; ResultLab->setText(sum); INPUT += QString::fromStdString(umm);}
     else{warnDef->exec();}
-    fileIn.close();
+    defineFile.close();
 }
 void MainWindow::addStrZ()
 {
@@ -1074,19 +1114,40 @@ void MainWindow::addStrZ()
     warnDef->setText("Error : 𝑧 is not defined, please define the 𝑧 in the defines menu.");
     warnDef->setWindowTitle("Define Error!");
     QString sum = isPower ? ResultLab->text() + "<sup>𝑧</sup>" : ResultLab->text() + "𝑧";
-    std::ifstream fileIn;
+    QFile defineFile("defines.txt");
     int defCount = 0;
-    std::string humm = "";
-    fileIn.open("defines.txt");
-    while(fileIn && fileIn >> humm){
-        defCount++;
+    if(defineFile.open(QFile::ReadOnly))
+    {
+        QTextStream input(&defineFile);
+        while(!input.atEnd()){
+            input.readLine();
+            defCount++;
+        }
+        QString um = "";
+        defineFile.close();
+        QFile defineFile2("defines.txt");
+        if(defineFile2.open(QFile::ReadOnly))
+        {
+            QTextStream in(&defineFile2);
+            if(defCount >= 2)
+            {
+                int i = 0;
+                while(!in.atEnd()){
+                    i++;
+                    um = in.readLine();
+                    if(i == 3){
+                        break;
+                    }
+                }
+                ResultLab->setText(sum); INPUT += um;
+            }
+            else{warnDef->exec();}
+        }
+        else{warnDef->exec();}
+        defineFile2.close();
     }
-    fileIn.close();
-    fileIn.open("defines.txt");
-    std::string umm = "";
-    if(fileIn && defCount >= 3){fileIn >> umm; fileIn >> umm; fileIn >> umm;ResultLab->setText(sum); INPUT += QString::fromStdString(umm);}
     else{warnDef->exec();}
-    fileIn.close();
+    defineFile.close();
 }
 void MainWindow::delStr()
 {

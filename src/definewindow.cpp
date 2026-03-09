@@ -7,9 +7,10 @@
 #include <QCloseEvent>
 #include "MouseCache.h"
 #include <QPoint>
-#include <fstream>
 #include <QPointF>
 #include <QMessageBox>
+#include <QTextStream>
+#include <QFile>
 #include <sstream>
 bool isdraggin = false;
 QPointF dragpos;
@@ -555,18 +556,23 @@ QString Calculate(QString RawInput)
 }
 
 
+
 void DefineWindow::exitDef(){
     QMessageBox *dfWarn;
     dfWarn = new QMessageBox(this);
     dfWarn->setText("Error : cannot open or create defines.txt");
     dfWarn->setWindowTitle("Error");
-    std::string newLine = "\n";
-    std::string allDefs = Calculate(QString::fromStdString(clean_white_space(xLine->text().toStdString()))).toStdString() + newLine + Calculate(QString::fromStdString(clean_white_space(yLine->text().toStdString()))).toStdString()+ newLine + Calculate(QString::fromStdString(clean_white_space(zLine->text().toStdString()))).toStdString();
-    std::ofstream OutStream;
-    OutStream.open("defines.txt");
-    if(OutStream){OutStream.write(allDefs.c_str(), allDefs.length());}
+    QString newLine = "\n";
+    QString allDefs = Calculate(QString::fromStdString(clean_white_space(xLine->text().toStdString()))) + "\n" + Calculate(QString::fromStdString(clean_white_space(yLine->text().toStdString()))) + "\n" + Calculate(QString::fromStdString(clean_white_space(zLine->text().toStdString())));
+    QFile defineFile("defines.txt");
+    if(defineFile.open(QFile::WriteOnly | QFile::Text))
+    {
+        QTextStream output(&defineFile);
+        output << allDefs;
+        defineFile.flush();
+    }
     else{dfWarn->exec();}
-    OutStream.close();
+    defineFile.close();
 }
 void DefineWindow::closeEvent(QCloseEvent *event){
     exitDef();
@@ -589,6 +595,10 @@ void DefineWindow::mouseMoveEvent(QMouseEvent *event){
 DefineWindow::DefineWindow(QWidget *parent)
     : QDialog(parent)
 {
+    QMessageBox *dfWarn;
+    dfWarn = new QMessageBox(this);
+    dfWarn->setText("Error : cannot open or create defines.txt");
+    dfWarn->setWindowTitle("Error");
     this->setWindowFlags(Qt::FramelessWindowHint);
     this->resize(300, 300);
     this->setStyleSheet("background-color: #101018");
@@ -598,21 +608,23 @@ DefineWindow::DefineWindow(QWidget *parent)
     xLine = new QLineEdit(this);
     yLine = new QLineEdit(this);
     zLine = new QLineEdit(this);
+    QFile defineFile("defines.txt");
     QWidget *titlebar = new QWidget(this);
-    std::ifstream InStream;
-    InStream.open("defines.txt");
-    std::string a = "";
+    QTextStream input(&defineFile);
     int i = 0;
-    while(InStream && InStream >> a){
-        i++;
-        if(i == 1){
-            xLine->setText(QString::fromStdString(a));
-        }
-        else if(i == 2){
-            yLine->setText(QString::fromStdString(a));
-        }
-        else{
-            zLine->setText(QString::fromStdString(a));
+    if(defineFile.open(QFile::ReadOnly) && defineFile.exists())
+    {
+        while(!input.atEnd()){
+            i++;
+            if(i == 1){
+                xLine->setText(input.readLine());
+            }
+            else if(i == 2){
+                yLine->setText(input.readLine());
+            }
+            else{
+                zLine->setText(input.readLine());
+            }
         }
     }
     titlebar->setStyleSheet("background-color: #2F2F38");
@@ -642,6 +654,6 @@ DefineWindow::DefineWindow(QWidget *parent)
     closebtn->setStyleSheet("background-color: #2F2F38;color: #DFDFDF; font-size: 18px; border: none;");
     connect(minBtn, &QPushButton::clicked, this, &QWidget::showMinimized);
     connect(closebtn, SIGNAL(clicked()), this, SLOT(close()));
-    InStream.close();
+    defineFile.close();
 }
 DefineWindow::~DefineWindow(){}
