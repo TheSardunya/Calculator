@@ -558,6 +558,7 @@ QString Calculate(QString RawInput)
 
 
 void DefineWindow::exitDef(){
+    QFile checkOpen("open.txt");
     QMessageBox *dfWarn;
     dfWarn = new QMessageBox(this);
     dfWarn->setText("Error : cannot open or create defines.txt");
@@ -573,6 +574,11 @@ void DefineWindow::exitDef(){
     }
     else{dfWarn->exec();}
     defineFile.close();
+    if(checkOpen.exists("open.txt") && checkOpen.open(QFile::WriteOnly))
+    {
+        if(!checkOpen.remove("open.txt")){qDebug("Permission denied!");}
+    }
+    checkOpen.close();
 }
 void DefineWindow::closeEvent(QCloseEvent *event){
     exitDef();

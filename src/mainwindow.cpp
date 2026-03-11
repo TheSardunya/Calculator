@@ -1055,7 +1055,8 @@ void MainWindow::addStrX()
                     um = in.readLine();
                     break;
                 }
-                ResultLab->setText(sum); INPUT += um;
+                if(um == ""){warnDef->exec();}
+                else{ResultLab->setText(sum); INPUT += um;}
             }
             else{warnDef->exec();}
         }
@@ -1097,7 +1098,8 @@ void MainWindow::addStrY()
                         break;
                     }
                 }
-                ResultLab->setText(sum); INPUT += um;
+                if(i < 2 || um == ""){warnDef->exec();}
+                else{ResultLab->setText(sum); INPUT += um;}
             }
             else{warnDef->exec();}
         }
@@ -1139,7 +1141,8 @@ void MainWindow::addStrZ()
                         break;
                     }
                 }
-                ResultLab->setText(sum); INPUT += um;
+                if(i < 3){warnDef->exec();}
+                else{ResultLab->setText(sum); INPUT += um;}
             }
             else{warnDef->exec();}
         }
