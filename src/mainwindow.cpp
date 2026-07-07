@@ -928,7 +928,7 @@ void MainWindow::addStrCon()
     INPUT += "-";
     QString summary = ResultLab->text();
     summary += isPower ? "⁻" : "-";
-    if(INPUT[INPUT.length() - 2] != '^' && !opnPwrBr){isPower = false; summary[summary.length() - 1] = '-';}
+    if(INPUT.length() > 1){if(INPUT[INPUT.length() - 2] != '^' && !opnPwrBr){isPower = false; summary[summary.length() - 1] = '-';}}
     ResultLab->setText(summary);
 }
 void MainWindow::addStrDiv()
