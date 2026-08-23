@@ -18,7 +18,7 @@
 #include <QPointF>
 #include <QDebug>
 QPointF dragPos;
-bool opnPwrBr = false, isDraggin = false;
+bool opnPwrBr = false, isDraggin = false, openedDefineWindow;
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
     if(event->button() == Qt::LeftButton)
@@ -1181,6 +1181,9 @@ void MainWindow::delStr()
 }
 void MainWindow::defChMode()
 {
-    DefineWindow *dfn = new DefineWindow();
-    dfn->show();
+    if(!openedDefineWindow){
+        openedDefineWindow = true;
+        DefineWindow *dfn = new DefineWindow(nullptr, &openedDefineWindow);
+        dfn->show();
+    }
 }

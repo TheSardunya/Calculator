@@ -13,6 +13,7 @@
 #include <QFile>
 #include <sstream>
 bool isdraggin = false;
+bool *opened_global = nullptr;
 QPointF dragpos;
 QString Calculate(QString RawInput)
 {
@@ -574,14 +575,10 @@ void DefineWindow::exitDef(){
     }
     else{dfWarn->exec();}
     defineFile.close();
-    if(checkOpen.exists("open.txt") && checkOpen.open(QFile::WriteOnly))
-    {
-        if(!checkOpen.remove("open.txt")){qDebug("Permission denied!");}
-    }
-    checkOpen.close();
 }
 void DefineWindow::closeEvent(QCloseEvent *event){
     exitDef();
+    *opened_global = false;
     event->accept();
 }
 void DefineWindow::mousePressEvent(QMouseEvent *event){
@@ -598,9 +595,22 @@ void DefineWindow::mouseMoveEvent(QMouseEvent *event){
     }
     event->accept();
 }
-DefineWindow::DefineWindow(QWidget *parent)
+
+void DefineWindow::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
+    {
+        exitDef();
+        *opened_global = false;
+        exitDef();
+        close();
+    }
+}
+
+DefineWindow::DefineWindow(QWidget *parent, bool *opened)
     : QDialog(parent)
 {
+    opened_global = opened;
     QMessageBox *dfWarn;
     dfWarn = new QMessageBox(this);
     dfWarn->setText("Error : cannot open or create defines.txt");

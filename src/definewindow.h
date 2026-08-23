@@ -20,13 +20,14 @@ class DefineWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit DefineWindow(QWidget *parent = nullptr);
+    explicit DefineWindow(QWidget *parent = nullptr, bool *opened = nullptr);
     ~DefineWindow();
 protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void closeEvent(QCloseEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
 private:
     void exitDef();
     Ui::DefineWindow *ui;
