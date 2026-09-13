@@ -827,16 +827,22 @@ QString MainWindow::Calculate(QString RawInput)
     return RawInput;
 }
 
-void MainWindow::StringSet()
+void MainWindow::checkSize()
 {
+    if(ResultLab->text().length() > 17){ResultLab->setStyleSheet("color: #DFDFDF; font-size: 24px; background-color: #30303F; border-radius: 8px;");}
 
+    if(ResultLab->text().length() > 23){ResultLab->setStyleSheet("color: #DFDFDF; font-size: 16px; background-color: #30303F; border-radius: 8px;");}
+
+    if(ResultLab->text().length() <= 17){ResultLab->setStyleSheet("color: #DFDFDF; font-size: 32px; background-color: #30303F; border-radius: 8px;");}
 }
+
 void MainWindow::addStr1()
 {
     INPUT += "1";
     QString summary = ResultLab->text();
     summary += isPower ? "¹" : "1";
     ResultLab->setText(summary);
+    checkSize();
 }
 void MainWindow::addStr2()
 {
@@ -844,6 +850,7 @@ void MainWindow::addStr2()
     QString summary = ResultLab->text();
     summary += isPower ? "²" : "2";
     ResultLab->setText(summary);
+    checkSize();
 }
 void MainWindow::addStr3()
 {
@@ -851,6 +858,7 @@ void MainWindow::addStr3()
     QString summary = ResultLab->text();
     summary += isPower ? "³" : "3";
     ResultLab->setText(summary);
+    checkSize();
 }
 void MainWindow::addStr4()
 {
@@ -858,6 +866,7 @@ void MainWindow::addStr4()
     QString summary = ResultLab->text();
     summary += isPower ? "⁴" : "4";
     ResultLab->setText(summary);
+    checkSize();
 }
 void MainWindow::addStr5()
 {
@@ -865,6 +874,7 @@ void MainWindow::addStr5()
     QString summary = ResultLab->text();
     summary += isPower ? "⁵" : "5";
     ResultLab->setText(summary);
+    checkSize();
 }
 void MainWindow::addStr6()
 {
@@ -872,6 +882,7 @@ void MainWindow::addStr6()
     QString summary = ResultLab->text();
     summary += isPower ? "⁶" : "6";
     ResultLab->setText(summary);
+    checkSize();
 }
 void MainWindow::addStr7()
 {
@@ -879,6 +890,7 @@ void MainWindow::addStr7()
     QString summary = ResultLab->text();
     summary += isPower ? "⁷" : "7";
     ResultLab->setText(summary);
+    checkSize();
 }
 void MainWindow::addStr8()
 {
@@ -886,6 +898,7 @@ void MainWindow::addStr8()
     QString summary = ResultLab->text();
     summary += isPower ? "⁸" : "8";
     ResultLab->setText(summary);
+    checkSize();
 }
 void MainWindow::addStr9()
 {
@@ -893,6 +906,7 @@ void MainWindow::addStr9()
     QString summary = ResultLab->text();
     summary += isPower ? "⁹" : "9";
     ResultLab->setText(summary);
+    checkSize();
 }
 void MainWindow::addStr0()
 {
@@ -900,6 +914,7 @@ void MainWindow::addStr0()
     QString summary = ResultLab->text();
     summary += isPower ? "⁰" : "0";
     ResultLab->setText(summary);
+    checkSize();
 }
 void MainWindow::addStrRes()
 {
@@ -907,6 +922,7 @@ void MainWindow::addStrRes()
     ResultLab->setText(summary);
     INPUT = summary;
     isPower = false;
+    checkSize();
 }
 void MainWindow::addStrAC()
 {
@@ -914,6 +930,7 @@ void MainWindow::addStrAC()
     QString summary = "";
     ResultLab->setText(summary);
     isPower = false;
+    checkSize();
 }
 void MainWindow::addStrPlus()
 {
@@ -922,6 +939,7 @@ void MainWindow::addStrPlus()
     summary += opnPwrBr ? "<sup>+</sup>" : "+";
     ResultLab->setText(summary);
     isPower = opnPwrBr ? true : false;
+    checkSize();
 }
 void MainWindow::addStrCon()
 {
@@ -930,6 +948,7 @@ void MainWindow::addStrCon()
     summary += isPower ? "⁻" : "-";
     if(INPUT.length() > 1){if(INPUT[INPUT.length() - 2] != '^' && !opnPwrBr){isPower = false; summary[summary.length() - 1] = '-';}}
     ResultLab->setText(summary);
+    checkSize();
 }
 void MainWindow::addStrDiv()
 {
@@ -938,6 +957,7 @@ void MainWindow::addStrDiv()
     summary += opnPwrBr ? "<sup>÷</sup>" : "÷";
     ResultLab->setText(summary);
     isPower = opnPwrBr ? true : false;
+    checkSize();
 }
 void MainWindow::addStrMult()
 {
@@ -946,6 +966,7 @@ void MainWindow::addStrMult()
     summary += opnPwrBr ? "<sup>×</sup>" : "×";
     ResultLab->setText(summary);
     isPower = opnPwrBr ? true : false;
+    checkSize();
 }
 void MainWindow::addStrOpnBrck()
 {
@@ -955,6 +976,7 @@ void MainWindow::addStrOpnBrck()
     opnPwrBr = isPower ? true : false;
     ResultLab->setText(summary);
     isPower = opnPwrBr ? true : false;
+    checkSize();
 }
 void MainWindow::addStrDot()
 {
@@ -962,6 +984,7 @@ void MainWindow::addStrDot()
     QString summary = ResultLab->text();
     summary += isPower ? "<sup>.</sup>" : ".";
     ResultLab->setText(summary);
+    checkSize();
 }
 void MainWindow::addStrClsBrck()
 {
@@ -971,6 +994,7 @@ void MainWindow::addStrClsBrck()
     opnPwrBr = false;
     ResultLab->setText(summary);
     isPower = false;
+    checkSize();
 }
 void MainWindow::addStrSqrt()
 {
@@ -979,6 +1003,7 @@ void MainWindow::addStrSqrt()
     summary += opnPwrBr ? "<sup>√</sup>" : "√";
     ResultLab->setText(summary);
     isPower = opnPwrBr;
+    checkSize();
 }
 void MainWindow::addStrFact()
 {
@@ -987,11 +1012,13 @@ void MainWindow::addStrFact()
     summary += isPower ? "<sup>!</sup>" : "!";
     ResultLab->setText(summary);
     isPower = opnPwrBr ? true : false;
+    checkSize();
 }
 void MainWindow::addStrPwr()
 {
     INPUT += "^";
     isPower = true;
+    checkSize();
 }
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {

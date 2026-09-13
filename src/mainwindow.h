@@ -49,6 +49,7 @@ private slots:
     void addStrDot();
     void delStr();
     void defChMode();
+    void checkSize();
 protected:
     void keyPressEvent(QKeyEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
