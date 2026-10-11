@@ -286,6 +286,19 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     connect(btnDel, SIGNAL(clicked()), this, SLOT(delStr()));
     connect(btnDfn, SIGNAL(clicked()), this, SLOT(defChMode()));
 }
+
+QString MainWindow::calculate_to_input(QString Result)
+{
+    if(Result == "" || Result == nullptr){return "";}
+    return QString::fromStdString(std::to_string(Result.toDouble()));
+}
+
+QString input_to_calculate(QString Result)
+{
+    if(Result == "" || Result == nullptr){return "";}
+    return QString::number(Result.toDouble());
+}
+
 QString MainWindow::Calculate(QString RawInput)
 {
     QMessageBox warnParse;
@@ -355,7 +368,7 @@ QString MainWindow::Calculate(QString RawInput)
                     {
                         ap *= x;
                     }
-                    IRawInput = QString::number(ap);
+                    IRawInput = calculate_to_input(QString::number(ap));
                 }
                 else{warnParse.exec(); RawInput = ""; AraInput = "";}
             }
@@ -488,7 +501,7 @@ QString MainWindow::Calculate(QString RawInput)
                     {
                         res *= v;
                     }
-                    AraInput += QString::number(res);
+                    AraInput += calculate_to_input(QString::number(res));
                 }
                 else{warnParse.exec(); RawInput = ""; AraInput = "";}
             }
@@ -502,9 +515,9 @@ QString MainWindow::Calculate(QString RawInput)
 			else if (x == startop)
 			{
 				QString rawx = sum;
-				QString output = QString::number(x);
-				if(TryParse(rawx)){double x = rawx.toDouble();x = sqrt(x);AraInput += QString::number(x);}
-				else{warnParse.exec(); RawInput = ""; AraInput = "";}
+                QString output = calculate_to_input(QString::number(x));
+                if(TryParse(rawx)){double x = rawx.toDouble();x = sqrt(x);AraInput += calculate_to_input(QString::number(x));}
+                else{warnParse.exec(); RawInput = ""; AraInput = "";}
 			}
 			
 		}
@@ -600,8 +613,8 @@ QString MainWindow::Calculate(QString RawInput)
                     }
                     a = rawx.toDouble();
                     b = rawy.toDouble();
-					if(!xparanted && a < 0){double resultD = pow(a,b);if(resultD > 0){resultD = 0 - resultD;};AraInput += QString::number(resultD);}
-					else{AraInput += QString::number(pow(a, b));}
+                    if(!xparanted && a < 0){double resultD = pow(a,b);if(resultD > 0){resultD = 0 - resultD;};AraInput += calculate_to_input(QString::number(resultD));}
+                    else{AraInput += calculate_to_input(QString::number(pow(a, b)));}
                 }
                 else{warnParse.exec(); RawInput = ""; AraInput = "";}
             }
@@ -686,6 +699,7 @@ QString MainWindow::Calculate(QString RawInput)
                     }
                 }
 
+                qDebug() << "rawx = " + rawx << "rawy = " + rawy;
                 if (TryParse(rawx) && TryParse(rawy))
                 {
                     if (rawx.length() > 1 && rawx[0] == '0' && rawx != "0" && rawx[1] != '.' && rawx[1] != ',')
@@ -806,11 +820,11 @@ QString MainWindow::Calculate(QString RawInput)
                     b = rawy.toDouble();
                     if (op == '+')
                     {
-                        AraInput += QString::number(a + b);
+                        AraInput += calculate_to_input(QString::number(a + b));
                     }
                     else
                     {
-                        AraInput += QString::number(a - b);
+                        AraInput += calculate_to_input(QString::number(a - b));
                     }
                 }
                 else{warnParse.exec();}
@@ -918,9 +932,10 @@ void MainWindow::addStr0()
 }
 void MainWindow::addStrRes()
 {
+    qDebug() << INPUT;
     QString summary = Calculate(INPUT);
-    ResultLab->setText(summary);
-    INPUT = summary;
+    ResultLab->setText(input_to_calculate(summary));
+    INPUT = calculate_to_input(summary);
     isPower = false;
     checkSize();
 }

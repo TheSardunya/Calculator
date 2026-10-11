@@ -39,6 +39,7 @@ private:
     QLabel *xLb;
     QLabel *yLb;
     QLabel *zLb;
+    QString calculate_to_input(QString);
 };
 
 #endif // DEFINEWINDOW_H

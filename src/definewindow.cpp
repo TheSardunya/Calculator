@@ -1,6 +1,5 @@
 #include "definewindow.h"
 #include "oreno.h"
-#include "mainwindow.h"
 #include <QWidget>
 #include <QPushButton>
 #include <QLineEdit>
@@ -556,16 +555,19 @@ QString Calculate(QString RawInput)
     return RawInput;
 }
 
-
+QString DefineWindow::calculate_to_input(QString Result)
+{
+    if(Result == "" || Result == nullptr){return "";}
+    return QString::fromStdString(std::to_string(Result.toDouble()));
+}
 
 void DefineWindow::exitDef(){
-    QFile checkOpen("open.txt");
     QMessageBox *dfWarn;
     dfWarn = new QMessageBox(this);
     dfWarn->setText("Error : cannot open or create defines.txt");
     dfWarn->setWindowTitle("Error");
     QString newLine = "\n";
-    QString allDefs = Calculate(QString::fromStdString(clean_white_space(xLine->text().toStdString()))) + "\n" + Calculate(QString::fromStdString(clean_white_space(yLine->text().toStdString()))) + "\n" + Calculate(QString::fromStdString(clean_white_space(zLine->text().toStdString())));
+    QString allDefs = calculate_to_input(Calculate(QString::fromStdString(clean_white_space(xLine->text().toStdString())))) + "\n" + calculate_to_input(Calculate(QString::fromStdString(clean_white_space(yLine->text().toStdString())))) + "\n" + calculate_to_input(Calculate(QString::fromStdString(clean_white_space(zLine->text().toStdString()))));
     QFile defineFile("defines.txt");
     if(defineFile.open(QFile::WriteOnly | QFile::Text))
     {

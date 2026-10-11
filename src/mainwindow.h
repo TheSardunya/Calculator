@@ -21,7 +21,6 @@ public:
     QString Calculate(QString);
     explicit MainWindow(QWidget *parent = nullptr);
 private slots:
-    void StringSet();
     void addStr1();
     void addStr2();
     void addStr3();
@@ -89,6 +88,6 @@ private:
     MouseCache *btnMult;
     MouseCache *btnPwr;
     bool isPower;
-
+    QString calculate_to_input(QString);
 };
 #endif
